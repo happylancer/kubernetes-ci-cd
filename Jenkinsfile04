@@ -24,7 +24,7 @@ podTemplate(label: 'mypod', containers: [
 
         stage('deploy') {
             container('kubectl') {
-                sh "sed 's#172.27.129.200:30400/monitor-scale:latest#172.27.129.200:30400/monitor-scale:b186c56'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -"
+                sh "sed 's#127.0.0.1:30400/monitor-scale:latest#172.27.129.200:30400/monitor-scale:b186c56#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -"
             }
         }
         stage('do some helm work') {
