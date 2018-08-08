@@ -1,0 +1,39 @@
+podTemplate(label: 'mypod', containers: [
+    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
+  ],
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+  ]) {
+    node('mypod') {
+
+        checkout scm
+        
+        env.DOCKER_API_VERSION="1.23"        
+        
+        sh "git rev-parse --short HEAD > commit-id"
+
+        tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+
+        stage('build/push') {
+            container('docker') {
+
+            }
+        }
+
+        stage('deploy') {
+            container('kubectl') {
+                sh "sed 's#172.27.129.200:30400/monitor-scale:latest#172.27.129.200:30400/monitor-scale:b186c56'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -"
+            }
+        }
+        stage('do some helm work') {
+            container('helm') {
+
+               sh "helm ls"
+            }
+        }
+    }
+}
+
+
