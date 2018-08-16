@@ -21,13 +21,17 @@ podTemplate(label: 'mypod', containers: [
 
         stage('do some kubectl work') {
             container('kubectl') {
-
+                sh 'kubectl version'
             }
         }
         stage('do some helm work') {
             container('helm') {
 
+               //Error: pods is forbidden: User "system:serviceaccount:default:default" cannot list pods in the namespace "kube-system"
                sh "helm ls"
+
+
+
             }
         }
     }
