@@ -28,7 +28,7 @@ podTemplate(label: 'mypod', containers: [
             container('helm') {
 
                //Error: pods is forbidden: User "system:serviceaccount:default:default" cannot list pods in the namespace "kube-system"
-               sh "helm ls"
+               sh "helm ls --tls"
 
 
 
