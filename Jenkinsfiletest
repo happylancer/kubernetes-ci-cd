@@ -28,7 +28,8 @@ podTemplate(label: 'mypod', containers: [
             container('helm') {
 
                //Error: pods is forbidden: User "system:serviceaccount:default:default" cannot list pods in the namespace "kube-system"
-               sh "helm ls --tls"
+               //helm ls --tls  could not read x509 key pair (cert: "/home/jenkins/.helm/cert.pem", key: "/home/jenkins/.helm/key.pem"): can't load key pair from cert /home/jenkins/.helm/cert.pem and key /home/jenkins/.helm/key.pem: open /home/jenkins/.helm/cert.pem: no such file or directory
+               sh "helm version"
 
 
 
