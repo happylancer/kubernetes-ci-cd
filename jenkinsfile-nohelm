@@ -1,0 +1,39 @@
+podTemplate(label: 'mypod', containers: [
+    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
+  ],
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+  ]) {
+    node('mypod') {
+
+        stage('do some Docker work') {
+            container('docker') {
+
+                // example to show you can run docker commands when you mount the socket
+                sh 'hostname'
+                sh 'hostname -i'
+                sh 'docker ps'
+
+            }
+        }
+
+        stage('do some kubectl work') {
+            container('kubectl') {
+                sh 'kubectl version'
+            }
+        }
+        stage('do some helm work') {
+            container('helm') {
+
+               //Error: pods is forbidden: User "system:serviceaccount:default:default" cannot list pods in the namespace "kube-system"
+               //helm ls --tls  could not read x509 key pair (cert: "/home/jenkins/.helm/cert.pem", key: "/home/jenkins/.helm/key.pem"): can't load key pair from cert /home/jenkins/.helm/cert.pem and key /home/jenkins/.helm/key.pem: open /home/jenkins/.helm/cert.pem: no such file or directory
+               //sh "helm version"
+
+
+
+            }
+        }
+    }
+}
